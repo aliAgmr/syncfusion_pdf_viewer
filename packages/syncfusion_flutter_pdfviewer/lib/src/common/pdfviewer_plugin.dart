@@ -21,12 +21,15 @@ class PdfViewerPlugin {
   CancelableOperation<Uint8List?>? _nativeImage;
 
   /// Initialize the PDF renderer.
-  Future<int> initializePdfRenderer(Uint8List documentBytes) async {
+  Future<Map<String, dynamic>> initializePdfRenderer(Uint8List documentBytes) async {
     _documentID = const Uuid().v1();
     final String? pageCount = await PdfViewerPlatform.instance
         .initializePdfRenderer(documentBytes, _documentID!);
     _pageCount = int.parse(pageCount!);
-    return _pageCount;
+    return {
+      'pageCount': _pageCount,
+      'documentId': _documentID
+    };
   }
 
   /// Retrieves original height of PDF pages.

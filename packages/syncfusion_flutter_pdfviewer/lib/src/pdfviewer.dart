@@ -1189,8 +1189,11 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
           _performTextExtraction();
         }
       }
-      final int pageCount = await _plugin.initializePdfRenderer(_pdfBytes);
+      final Map<String, dynamic> initializationResult = await _plugin.initializePdfRenderer(_pdfBytes);
+      final int pageCount = initializationResult['pageCount'];
+      final String documentId = initializationResult['documentId'];
       _pdfViewerController._pageCount = pageCount;
+      _pdfViewerController._documentId = documentId;
       if (pageCount > 0) {
         _pdfViewerController._pageNumber = 1;
       }
@@ -3755,6 +3758,9 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
 ///}
 /// ```
 class PdfViewerController extends ChangeNotifier with _ValueChangeNotifier {
+
+  String _documentId = '';
+
   /// Zoom level
   double _zoomLevel = 1;
 
@@ -4021,6 +4027,8 @@ class PdfViewerController extends ChangeNotifier with _ValueChangeNotifier {
   int get pageCount {
     return _totalPages;
   }
+
+  String get documentId => _documentId;
 
   /// Navigates to the specified bookmark location in a PDF document.
   ///
