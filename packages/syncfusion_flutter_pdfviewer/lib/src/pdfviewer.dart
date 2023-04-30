@@ -2021,7 +2021,13 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
                       : const Color(0xFF303030)),
               // ignore: always_specify_types
               child: FutureBuilder(
-                  future: _getImages(),
+                  future: ()async{
+                    final Map<int, List<dynamic>>? renderedPages = await _getImages();
+                    if (widget.controller != null){
+                      widget.controller!.pages = renderedPages!;
+                    }
+                    return renderedPages;
+                  },
                   builder:
                       (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                     if (snapshot.hasData) {
@@ -3758,6 +3764,18 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
 ///}
 /// ```
 class PdfViewerController extends ChangeNotifier with _ValueChangeNotifier {
+
+  Map<int, List<dynamic>> _pages = <int, List<dynamic>>{};
+
+  Map<int, List<dynamic>> get pages => _pages;
+
+  set pages(Map<int, List<dynamic>> value) {
+    if (_pages == value) {
+      return;
+    }
+    _pages = value;
+    _notifyPropertyChangedListeners(property: 'pages');
+  }
 
   String _documentId = '';
 
