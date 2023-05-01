@@ -1002,6 +1002,14 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
     _previousPageNumber = 1;
     _maxPdfPageWidth = 0;
     WidgetsBinding.instance.addObserver(this);
+    _getInitImages();
+  }
+
+  _getInitImages() async {
+    final Map<int, List<dynamic>>? pages = await _getImages();
+    if (widget.controller != null) {
+      widget.controller?.pages = pages!;
+    }
   }
 
   @override
@@ -1010,8 +1018,7 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
     _pdfViewerThemeData = SfPdfViewerTheme.of(context);
     _themeData = Theme.of(context);
     _localizations = SfLocalizations.of(context);
-    _isOrientationChanged = _deviceOrientation != null &&
-        _deviceOrientation != MediaQuery.of(context).orientation;
+    _isOrientationChanged = _deviceOrientation != null && _deviceOrientation != MediaQuery.of(context).orientation;
   }
 
   @override
@@ -2021,15 +2028,8 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
                       : const Color(0xFF303030)),
               // ignore: always_specify_types
               child: FutureBuilder(
-                  future: ()async{
-                    final Map<int, List<dynamic>>? renderedPages = await _getImages();
-                    if (widget.controller != null){
-                      widget.controller!.pages = renderedPages!;
-                    }
-                    return renderedPages;
-                  },
-                  builder:
-                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                  future: _getImages,
+                  builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                     if (snapshot.hasData) {
                       final dynamic pdfImages = snapshot.data;
                       _renderedImages.clear();
