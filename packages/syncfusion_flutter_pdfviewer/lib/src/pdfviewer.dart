@@ -2028,7 +2028,7 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
                       : const Color(0xFF303030)),
               // ignore: always_specify_types
               child: FutureBuilder(
-                  future: _getImages,
+                  future: _getImages(),
                   builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                     if (snapshot.hasData) {
                       final dynamic pdfImages = snapshot.data;
