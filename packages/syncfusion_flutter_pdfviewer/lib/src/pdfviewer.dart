@@ -2331,8 +2331,8 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
                         if (_scrollDirection == PdfScrollDirection.horizontal) {
                           child = Row(
                               key: _childKey,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: children);
+                              mainAxisAlignment: MainAxisAlignment.center, textDirection: _textDirection,
+                              children: children,);
                         } else {
                           child = Column(
                               key: _childKey,
